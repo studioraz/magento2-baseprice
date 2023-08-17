@@ -22,7 +22,7 @@
         <baseprice>
             <general>
                 <enabled>1</enabled>
-                <template>{BASE_PRICE} / {REF_AMOUNT} {REF_UNIT}</template>
+                <template>{BASE_PRICE} {BASE_UNIT} | {BASE_PRICE} / {REF_AMOUNT} {REF_UNIT}</template>
             </general>
         </baseprice>
     </default>

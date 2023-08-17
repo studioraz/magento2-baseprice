@@ -37,9 +37,12 @@ The extension can be configured if you go to ```Stores > Configuration``` and af
 After enabling the extension you can edit the base price template in order to influence the base price rendering in the frontend. You can type in whatever you want.   
 There are three variables available to render the base price information:
 * {BASE_PRICE}: Renders the calculated base price
+* {BASE_AMOUNT}: Renders the product sale amount
+* {BASE_UNIT}: Renders the product sale unit
 * {REF_AMOUNT}: Renders the reference amount
 * {REF_UNIT}: Renders the reference unit
 
+* 
 **Example**: {BASE__PRICE} / {REF__AMOUNT} {REF__UNIT} will render to 2.90€ / 10 kg in the frontend.
 
 ![BasePrice-Template](_images/bp_config_1.png?raw=true "BasePrice Template")

@@ -34,7 +34,7 @@
                 </field>
                 <field id="template" translate="label comment" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Base price template</label>
-                    <comment>Template to render the base price, variables to use: {BASE_PRICE}, {REF_AMOUNT}, {REF_UNIT}</comment>
+                    <comment>Template to render the base price, variables to use: {BASE_AMOUNT}, {BASE_UNIT}, {BASE_PRICE}, {REF_AMOUNT}, {REF_UNIT}</comment>
                 </field>
                 <field id="conversion" translate="label" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Conversion mapping</label>
