@@ -35,7 +35,7 @@ After clicking on it you see a dropdown box where you can enable/disable the mod
 ## Extension configuration
 The extension can be configured if you go to ```Stores > Configuration``` and afterwards to ```Magenerds > Base Price```.   
 After enabling the extension you can edit the base price template in order to influence the base price rendering in the frontend. You can type in whatever you want.   
-There are three variables available to render the base price information:
+There are five variables available to render the base price information:
 * {BASE_PRICE}: Renders the calculated base price
 * {BASE_AMOUNT}: Renders the product sale amount
 * {BASE_UNIT}: Renders the product sale unit
@@ -43,7 +43,8 @@ There are three variables available to render the base price information:
 * {REF_UNIT}: Renders the reference unit
 
 * 
-**Example**: {BASE__PRICE} / {REF__AMOUNT} {REF__UNIT} will render to 2.90€ / 10 kg in the frontend.
+**Example**: {BASE_AMOUNT} {BASE_UNIT} | {BASE__PRICE} / {REF__AMOUNT} {REF__UNIT} will render to: 
+```1 tn | 2.90€ / 10 kg``` 
 
 ![BasePrice-Template](_images/bp_config_1.png?raw=true "BasePrice Template")
 
