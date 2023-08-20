@@ -15,9 +15,11 @@
  * @link       https://www.techdivision.com/
  * @author     Florian Sydekum <f.sydekum@techdivision.com>
  */
+
 namespace Magenerds\BasePrice\Model\Plugin;
 
-use Magento\Catalog\Pricing\Price\FinalPrice;
+use Closure;
+use Magenerds\BasePrice\Model\BasePriceBlock;
 use Magento\Framework\Pricing\Render;
 use Magento\Framework\Pricing\SaleableInterface;
 use Magento\Framework\View\LayoutInterface;
@@ -52,39 +54,43 @@ class AfterPrice
      */
     protected $afterPriceHtml = [];
 
+    protected BasePriceBlock $basePriceBlock;
+
     /**
      * @param LayoutInterface $layout
      */
     public function __construct(
-        LayoutInterface $layout
-    ){
+        LayoutInterface $layout,
+        BasePriceBlock $basePriceBlock
+    ) {
         $this->layout = $layout;
+        $this->basePriceBlock = $basePriceBlock;
     }
 
     /**
      * Plugin for price rendering in order to display after price information
      *
      * @param Render $subject
-     * @param $renderHtml string
-     * @return string
+     * @param Closure $closure
+     * @param string $priceCode
+     * @param SaleableInterface $saleableItem
+     * @param array $arguments
+     *
+     * @return mixed|string
      */
-    public function aroundRender(Render $subject, \Closure $closure, ...$params)
+    public function aroundRender(Render $subject, Closure $closure, $priceCode, SaleableInterface $saleableItem, array $arguments = [])
     {
-        // run default render first
-        $renderHtml = $closure(...$params);
+        $renderHtml = $closure($priceCode, $saleableItem, $arguments);
 
-        try{
-            // Get Price Code and Product
-            list($priceCode, $productInterceptor) = $params;
-            $emptyTierPrices = empty($productInterceptor->getTierPrice());
+        try {
+            $hasNoTierPrice = empty($saleableItem->getTierPrice());
 
             // If it is final price block and no tier prices exist set additional render
             // If it is tier price block and tier prices exist set additional render
-            if ((static::FINAL_PRICE === $priceCode && $emptyTierPrices) || (static::TIER_PRICE === $priceCode && !$emptyTierPrices)) {
-                $renderHtml .= $this->getAfterPriceHtml($productInterceptor);
+            if ((self::FINAL_PRICE === $priceCode && $hasNoTierPrice) || (self::TIER_PRICE === $priceCode && !$hasNoTierPrice)) {
+                $renderHtml .= $this->getBasePriceHtml($saleableItem);
             }
-        } catch (\Exception $ex) {
-            // if an error occurs, just render the default since it is preallocated
+        } catch (\Exception $e) {
             return $renderHtml;
         }
 
@@ -96,40 +102,12 @@ class AfterPrice
      *
      * @return null|string
      */
-    protected function getAfterPriceHtml(SaleableInterface $product)
+    protected function getBasePriceHtml(SaleableInterface $saleableItem)
     {
-        // check if product is available
-        if (!$product) return '';
-
-        // if a grouped product is given we need the current child
-        if ($product->getTypeId() == 'grouped') {
-            $product = $product->getPriceInfo()
-                ->getPrice(FinalPrice::PRICE_CODE)
-                ->getMinProduct();
-
-            // check if we found a product
-            if (!$product) return '';
+        if (!array_key_exists($saleableItem->getId(), $this->afterPriceHtml)) {
+            $this->afterPriceHtml[$saleableItem->getId()] = $this->basePriceBlock->setProduct($saleableItem)->getBasePriceBlock()->toHtml();
         }
 
-        // check if price for current product has been rendered before
-        if (!array_key_exists($product->getId(), $this->afterPriceHtml)) {
-            $afterPriceBlock = $this->layout->createBlock(
-                'Magenerds\BasePrice\Block\AfterPrice',
-                'baseprice_afterprice_' . $product->getId(),
-                ['product' => $product]
-            );
-
-            // use different templates for configurables and other product types
-            if ($product->getTypeId() == 'configurable') {
-                $templateFile = 'Magenerds_BasePrice::configurable/afterprice.phtml';
-            } else {
-                $templateFile = 'Magenerds_BasePrice::afterprice.phtml';
-            }
-
-            $afterPriceBlock->setTemplate($templateFile);
-            $this->afterPriceHtml[$product->getId()] = $afterPriceBlock->toHtml();
-        }
-
-        return $this->afterPriceHtml[$product->getId()];
+        return $this->afterPriceHtml[$saleableItem->getId()];
     }
 }
