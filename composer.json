@@ -1,17 +1,19 @@
 {
-  "name": "studioraz/magento2-baseprice",
-  "description": "This module displays base prices",
-  "require": {
-    "magento/framework": "^100.0.0|^101.0.0|^102.0.0|^103.0.0"
-  },
-  "type": "magento2-module",
-  "license": "OSL-3.0",
-  "autoload": {
-    "files": [
-      "registration.php"
-    ],
-    "psr-4": {
-      "Magenerds\\BasePrice\\": ""
+    "name": "studioraz/magento2-baseprice",
+    "description": "This module displays base prices",
+    "type": "magento2-module",
+    "prefer-stable": true,
+    "version": "2.2.1",
+    "license": "OSL-3.0",
+    "require": {
+        "magento/framework": "^100.0.0|^101.0.0|^102.0.0|^103.0.0"
+    },
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "Magenerds\\BasePrice\\": ""
+        }
     }
-  }
 }

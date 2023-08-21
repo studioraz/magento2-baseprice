@@ -15,6 +15,7 @@
  * @link       https://www.techdivision.com/
  * @author     Florian Sydekum <f.sydekum@techdivision.com>
  */
+
 namespace Magenerds\BasePrice\Helper;
 
 use Magento\Catalog\Model\Product;
@@ -22,8 +23,8 @@ use Magento\Framework\App\Helper\AbstractHelper;
 use Magento\Framework\App\Helper\Context;
 use Magento\Framework\Pricing\Helper\Data as PriceHelper;
 use Magento\Framework\Pricing\PriceCurrencyInterface;
-use Magento\Store\Model\ScopeInterface;
 use Magento\Framework\Serialize\SerializerInterface;
+use Magento\Store\Model\ScopeInterface;
 
 /**
  * Class Data
@@ -57,7 +58,7 @@ class Data extends AbstractHelper
         Context $context,
         PriceHelper $priceHelper,
         SerializerInterface $serializer
-    ){
+    ) {
         $this->priceHelper = $priceHelper;
         $this->serializer = $serializer;
 
@@ -82,8 +83,7 @@ class Data extends AbstractHelper
 
         foreach ($configArray as $config) {
             if ($config['product_unit'] == $productUnit
-                && $config['reference_unit'] == $referenceUnit)
-            {
+                && $config['reference_unit'] == $referenceUnit) {
                 return $config['conversion_rate'];
             }
         }
@@ -109,10 +109,22 @@ class Data extends AbstractHelper
         if (!$basePrice) return '';
 
         return str_replace(
-            '{REF_UNIT}', $this->getReferenceUnit($product), str_replace(
-            '{REF_AMOUNT}', $this->getReferenceAmount($product), str_replace(
-                '{BASE_PRICE}', $this->priceHelper->currency($basePrice), $template)
-        ));
+            [
+                '{REF_UNIT}',
+                '{REF_AMOUNT}',
+                '{BASE_PRICE}',
+                '{BASE_UNIT}',
+                '{BASE_AMOUNT}',
+            ],
+            [
+                $this->getReferenceUnit($product),
+                $this->getReferenceAmount($product),
+                $this->priceHelper->currency($basePrice),
+                $this->getBaseUnit($product),
+                $this->getBaseAmount($product),
+            ],
+            $template
+        );
     }
 
     /**
@@ -133,6 +145,26 @@ class Data extends AbstractHelper
     public function getReferenceAmount(Product $product)
     {
         return round($product->getData('baseprice_reference_amount'), 2);
+    }
+
+    /**
+     * Returns the base unit of current product
+     *
+     * @return string
+     */
+    public function getBaseUnit(Product $product)
+    {
+        return $product->getAttributeText('baseprice_product_unit');
+    }
+
+    /**
+     * Returns the base amount of current product
+     *
+     * @return float
+     */
+    public function getBaseAmount(Product $product)
+    {
+        return round($product->getData('baseprice_product_amount'), 2);
     }
 
     /**
