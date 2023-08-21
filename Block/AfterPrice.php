@@ -15,6 +15,7 @@
  * @link       https://www.techdivision.com/
  * @author     Florian Sydekum <f.sydekum@techdivision.com>
  */
+
 namespace Magenerds\BasePrice\Block;
 
 /**
@@ -53,17 +54,17 @@ class AfterPrice extends \Magento\Framework\View\Element\Template
      * @param \Magento\Framework\Json\EncoderInterface $jsonEncoder
      * @param array $data
      */
-	public function __construct(
-		\Magento\Backend\Block\Template\Context $context,
+    public function __construct(
+        \Magento\Backend\Block\Template\Context $context,
         \Magenerds\BasePrice\Helper\Data $helper,
         \Magento\Catalog\Model\Product $product,
-		array $data = []
-	){
+        array $data = []
+    ) {
         $this->_scopeConfig = $context->getScopeConfig();
         $this->_helper = $helper;
         $this->_product = $product;
-		parent::__construct($context, $data);
-	}
+        parent::__construct($context, $data);
+    }
 
     /**
      * Returns the configuration if module is enabled
@@ -78,19 +79,20 @@ class AfterPrice extends \Magento\Framework\View\Element\Template
         );
 
         $productAmount = $this->getProduct()->getData('baseprice_product_amount');
+        $basePriceEnable = $this->getProduct()->getData('baseprice_is_enable');
 
-        return $moduleEnabled && !empty($productAmount);
+        return $moduleEnabled && $basePriceEnable && !empty($productAmount);
     }
 
-	/**
-	 * Retrieve current product
-	 *
-	 * @return \Magento\Catalog\Model\Product
-	 */
-	public function getProduct()
-	{
+    /**
+     * Retrieve current product
+     *
+     * @return \Magento\Catalog\Model\Product
+     */
+    public function getProduct()
+    {
         return $this->_product;
-	}
+    }
 
     /**
      * Returns the base price information
