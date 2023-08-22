@@ -18,7 +18,7 @@ You can also extend the units and edit all conversions. Furthermore the display 
 The easiest way to install the Magenerds module is via composer
 ```
 # add to composer require
-composer require magenerds/baseprice
+composer require studioraz/magento2-baseprice
 
 # run magento setup to activate the module
 bin/magento set:up
