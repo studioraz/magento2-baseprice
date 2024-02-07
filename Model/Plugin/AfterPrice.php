@@ -45,6 +45,13 @@ class AfterPrice
     const TIER_PRICE = 'tier_price';
 
     /**
+     * Hold wishlist price code
+     *
+     * @var string
+     */
+    const WISHLIST_PRICE = 'wishlist_configured_price';
+
+    /**
      * @var LayoutInterface
      */
     protected $layout;
@@ -87,7 +94,11 @@ class AfterPrice
 
             // If it is final price block and no tier prices exist set additional render
             // If it is tier price block and tier prices exist set additional render
-            if ((self::FINAL_PRICE === $priceCode && $hasNoTierPrice) || (self::TIER_PRICE === $priceCode && !$hasNoTierPrice)) {
+            if (
+                (self::FINAL_PRICE === $priceCode && $hasNoTierPrice) ||
+                (self::WISHLIST_PRICE === $priceCode && $hasNoTierPrice) ||
+                (self::TIER_PRICE === $priceCode && !$hasNoTierPrice)
+            ) {
                 $renderHtml .= $this->getBasePriceHtml($saleableItem);
             }
         } catch (\Exception $e) {
