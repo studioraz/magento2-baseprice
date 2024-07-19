@@ -24,5 +24,8 @@
     <type name="Magento\ConfigurableProduct\Block\Product\View\Type\Configurable">
         <plugin name="magenerds_baseprice_configurablePriceRender" type="Magenerds\BasePrice\Model\Plugin\ConfigurablePrice" />
     </type>
+    <type name="Magento\Catalog\Block\Product\View\Attributes">
+        <plugin name="magenerds_baseprice_product_attributes" type="Magenerds\BasePrice\Plugin\ProductAttributes" />
+    </type>
     <preference for="Magento\GroupedProduct\Model\Product\Type\Grouped" type="Magenerds\BasePrice\Model\Plugin\Grouped"/>
 </config>
