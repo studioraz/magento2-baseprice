@@ -39,7 +39,7 @@ class ProductAttributes
         $unit = '';
         if ($subject->getRequest()->getFullActionName() == 'catalog_product_view') {
             $product = $subject->getProduct();
-            $unit = ' ' . $product->getAttribute(self::BASE_PRICE_PRODUCT_UNIT);
+            $unit = ' ' . $product->getAttributeText(self::BASE_PRICE_PRODUCT_UNIT);
         }
         return $unit;
     }
