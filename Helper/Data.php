@@ -174,7 +174,8 @@ class Data extends AbstractHelper
      */
     public function getBasePrice(Product $product)
     {
-        $productPrice = round($product->getPriceInfo()->getPrice('final_price')->getAmount()->getValue(), PriceCurrencyInterface::DEFAULT_PRECISION);
+        $productPriceValue = $this->getPriceValue($product);
+        $productPrice = round($productPriceValue, PriceCurrencyInterface::DEFAULT_PRECISION);
         $conversion = $this->getConversion($product);
         $referenceAmount = $product->getData('baseprice_reference_amount');
         $productAmount = $product->getData('baseprice_product_amount');
@@ -185,5 +186,30 @@ class Data extends AbstractHelper
         }
 
         return $basePrice;
+    }
+
+    /**
+     * @param Product $product
+     * @return float
+     */
+    public function getPriceValue(Product $product): float
+    {
+        $finalPrice = $product->getPriceInfo()->getPrice('final_price');
+
+        if ($this->isFixedBundle($product)) {
+            return $finalPrice->getMaximalPrice()->getValue();
+        } else {
+            return $finalPrice->getAmount()->getValue();
+        }
+    }
+
+    /**
+     * @param Product $product
+     * @return bool
+     */
+    public function isFixedBundle(Product $product): bool
+    {
+        $attr = $product->getCustomAttribute('is_fixed_bundle');
+        return $attr && $attr->getValue();
     }
 }
