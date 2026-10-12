@@ -52,12 +52,20 @@ class BasePriceBlock
 
     public function getBasePriceBlock(): Template
     {
-        /** @var AfterPrice $afterPriceBlock */
-        $afterPriceBlock = $this->layout->createBlock(
-            AfterPrice::class,
-            'baseprice_afterprice_' . $this->product->getId(),
-            ['product' => $this->product]
-        );
+        $blockName = 'baseprice_afterprice_' . $this->product->getId();
+        $afterPriceBlock = $this->layout->getBlock($blockName);
+
+        if (!$afterPriceBlock) {
+            $name = $this->layout->hasElement($blockName) ? '' : $blockName;
+            /** @var AfterPrice $afterPriceBlock */
+            $afterPriceBlock = $this->layout->createBlock(
+                AfterPrice::class,
+                $name,
+                ['product' => $this->product]
+            );
+        } else {
+            $afterPriceBlock->setData('product', $this->product);
+        }
 
         $templateFile = ($this->product->getTypeId() === Configurable::TYPE_CODE)
             ? 'Magenerds_BasePrice::configurable/afterprice.phtml'
